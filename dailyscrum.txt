@@ -1,0 +1,137 @@
+[2023-05-11]
+
+    - Aleksejs
+
+        DONE: User registration with Authority
+        DONE: Password repeat in User registration form
+        DONE: All links access w/ roles and Security
+        DO: Testing
+        DO: Project presentation
+
+    - Lucas
+
+        DONE: More All-time stats
+        DONE: All Players new chart
+        DONE: Templating
+        DO: Testing
+        DO: Project presentation
+
+[2023-05-10]
+
+    - Aleksejs
+
+        DONE: Spring Security implementation
+        DONE: Login/logout
+        DO: User registration w/ Authority
+        DO: All links access w/ roles and Security
+        DO: Redirect instead of error when not permitted by role
+
+    - Lucas
+
+        DONE: All Players template
+        DONE: Training templates
+        DONE: Login template
+        CONTINUE: Player template
+        DO: AWS S3 Setup
+        DO: Thymeleaf Security alternate templates
+
+[2023-05-09]
+
+    - Aleksejs
+
+        DONE: Training CRUD
+        DONE: File upload (no S3 yet)
+        DO: Spring Security implementation
+        DO: Login
+
+    - Lucas
+
+        DONE: heroku config and deployment
+        DONE: match/{id} mapping and template
+        DONE: training templates
+        DO: delete modal confirmation (required)
+        DO: all nav links for all roles (will filter them with spring security after)
+        DO: player profile template
+
+[2023-05-08]
+
+    - Aleksejs
+
+        DONE: Add/Update Match CRUD
+        DONE: MatchDetails CRUD
+        DO: Training CRUD
+
+    - Lucas
+
+        DONE: All Matches template
+        DONE: Add/Update Match template
+        DO: Match Details template
+        DO: Heroku deployment
+
+[2023-05-07]
+
+    - Aleksejs
+
+        DONE: Match CRUD
+        DO: MatchDetails CRUD
+
+    - Lucas
+
+        DONE: Home template
+        DONE: Heroku registration
+        DO: Match template
+
+[2023-05-06]
+
+    - Aleksejs
+
+        DONE: /admin/users route
+        DONE: /admin/users/{id}/delete route
+        DONE: /admin/users/{id}/update route
+        DONE: /admin/users/register route
+        DO: MatchController Routes
+
+    - Lucas
+
+        DONE: Implement JSON serialization for charts
+        DONE: /admin/users template
+        DO: /admin/users/register template
+        DO: home template
+
+[2023-05-05]
+
+    - Aleksejs
+
+        DONE: Seeder
+        DONE: Entities, Repositories, Services
+        DO: Home/Admin Routes and Data pass
+
+    - Lucas
+
+        DONE: Learn JS Charts library chart.js
+        DO: Continue templating
+
+[2023-05-04]
+
+    - Aleksejs
+
+        DO: Setup AWS RDB
+        DO: Start seeder
+        DO: Start home
+
+    - Lucas
+
+        DO: Setup AWS RDB
+        DO: Start templating
+
+[2023-05-03]
+
+    - Aleksejs
+
+        DONE: Project Proposal
+        DONE: Trello Setup
+
+    - Lucas
+
+        DONE: Project Proposal
+        DONE: Github Setup

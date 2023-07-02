@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Player Profile</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <div class="row d-flex justify-content-between">
+
+            <div class="col-lg-6">
+
+                <div class="text-center border-0">
+                    <img class="mx-auto mt-5 mb-4 rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" th:src="${player.imagePath}" th:classappend="${player.imagePath == null} ? 'animated-gradient-js' : ''">
+                    <div>
+                        <h1 class="fw-bold" th:text="${player.firstName} + ' ' + ${player.lastName}"></h1>
+                        <h4 class="text-muted" th:text="${player.position}"></h4>
+                    </div>
+                </div>
+
+                <div class="list-group my-5">
+                    <li class="list-group-item"><span th:text="${totalGoals}" class="text-primary fw-bolder"></span> goals scored</li>
+                    <li class="list-group-item"><span th:text="${totalAssists}" class="text-primary fw-bolder"></span> assists</li>
+                    <li class="list-group-item"><span th:text="${totalYellows}" class="text-primary fw-bolder"></span> yellow cards</li>
+                    <li class="list-group-item"><span th:text="${totalReds}" class="text-primary fw-bolder"></span> red cards</li>
+                </div>
+
+            </div>
+
+            <div class="col-lg-5">
+
+                <div class="chart-container" style="height:550px">
+                    <canvas id="canvas1" th:data-player-id="${player.id}"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="/js/player-id.chart.canvas1.js"></script>
+
+</th:block>
+
+</body>
+</html>

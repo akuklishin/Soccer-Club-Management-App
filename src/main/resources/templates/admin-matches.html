@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <!-- flash message -->
+        <div th:if="${message}" class="alert alert-success my-5" role="alert">
+            <span th:text="${message}"></span>
+        </div>
+
+        <h1 class="border-bottom mb-5">All Matches</h1>
+
+        <a th:href="@{/admin/matches/add}" class="btn btn-primary">Add match</a>
+
+        <table class="table mt-5">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th>Score</th>
+                <th>Result</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr th:each="match: ${matches}">
+                <td th:text="${match.date}"/>
+                <td th:text="${match.opponentName}"/>
+                <td th:text="${match.ourScore} + ':' + ${match.opponentScore}" />
+                <td th:text="${match.result}"/>
+                <td>
+
+                    <a th:href="@{'/admin/match/' + ${match.id} + '/update'}" class="btn btn-primary btn-sm"
+                       th:object="${match}">Update</a>
+                    <a th:href="@{'/admin/match/' + ${match.id}}" class="btn btn-success btn-sm">Details</a>
+                    <a th:href="@{'/admin/match/' + ${match.id} + '/delete'}" class="btn btn-danger btn-sm"
+                       data-bs-toggle="modal" data-bs-target="#deleteMatchModal" th:data-match-id="${match.id}" th:data-match-opponent="${match.opponentName}">Delete</a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- match deletion modal -->
+    <div class="modal fade" id="deleteMatchModal" tabindex="-1" aria-labelledby="deleteMatchModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteMatchModalLabel">Confirm Match Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    The match against <span id="matchOpponent" class="fw-bold"></span> will be removed.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="#" class="btn btn-danger" id="deleteMatchBtn">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- match deletion modal behavior -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var deleteMatchModal = new bootstrap.Modal(document.getElementById('deleteMatchModal'));
+            var deleteMatchBtn = document.getElementById('deleteMatchBtn');
+            var matchOpponentSpan = document.getElementById('matchOpponent');
+
+            document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#deleteMatchModal"]').forEach(function (deleteBtn) {
+                deleteBtn.addEventListener('click', function () {
+                    var matchId = deleteBtn.getAttribute('data-match-id');
+                    var matchOpponent = deleteBtn.getAttribute('data-match-opponent');
+                    deleteMatchBtn.href = '/admin/match/' + matchId + '/delete';
+                    matchOpponentSpan.textContent = matchOpponent;
+                });
+            });
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

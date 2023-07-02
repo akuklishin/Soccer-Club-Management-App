@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Register User</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <div class="my-5">
+            <a th:href="@{/admin/users}">« back to All Users</a>
+        </div>
+
+        <h1 class="border-bottom mb-5" th:text="${user.id == null} ? 'Create User' : 'Update User'"></h1>
+
+        <form th:action="@{/admin/users/register}" th:object="${user}" method="post" enctype="multipart/form-data">
+
+            <div class="mb-3">
+                <label class="form-label" for="firstName">First Name</label>
+                <input class="form-control" th:field="*{firstName}" type="text" id="firstName" name="firstName">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="lastName">Last Name</label>
+                <input class="form-control" th:field="*{lastName}" type="text" id="lastName" name="lastName">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="password" th:style="${user.id == null} ? '' : 'display: none'">Password</label>
+                <input class="form-control" th:field="*{password}" th:type="${user.id == null} ? 'password' : 'hidden'" id="password" name="password">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="repeatPassword" th:style="${user.id == null} ? '' : 'display: none'">Repeat Password</label>
+                <input class="form-control" th:field="*{repeatPassword}" th:type="${user.id == null} ? 'password' : 'hidden'" id="repeatPassword" name="repeatPassword">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2" th:if="${#fields.hasErrors('repeatPassword')}" th:errors="*{repeatPassword}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" th:field="*{email}" type="email" id="email" name="email">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="role_position">Role / Position</label>
+                <select class="form-select" id="role_position" onchange="updateRoleAndPositionAndAuthority()">
+                    <option value="ADMIN_ADMIN">ADMIN</option>
+                    <option value="COACH_GENERAL">COACH - GENERAL</option>
+                    <option value="COACH_GOALKEEPER">COACH - GOALKEEPER</option>
+                    <option value="COACH_DEFENDER">COACH - DEFENDER</option>
+                    <option value="COACH_ATTACKER">COACH - ATTACKER</option>
+                    <option value="PLAYER_GOALKEEPER">PLAYER - GOALKEEPER</option>
+                    <option value="PLAYER_DEFENDER">PLAYER - DEFENDER</option>
+                    <option value="PLAYER_ATTACKER">PLAYER - ATTACKER</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="profileImage">Profile Picture</label>
+<!--                <input class="form-control" th:field="*{imagePath}" type="file" id="profileImage" name="profileImage">-->
+                <input class="form-control" type="file" id="profileImage" name="profileImage">
+<!--                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>-->
+            </div>
+
+            <input type="hidden" name="id" id="id" th:field="*{id}">
+            <input type="hidden" name="role" id="role" th:field="*{role}">
+            <input type="hidden" name="position" id="position" th:field="*{position}">
+            <input type="hidden" name="authorities" id="authority" th:field="*{authorities}">
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    setInitialRoleAndPositionAndAuthority();
+                    updateRoleAndPositionAndAuthority();
+                });
+
+                function setInitialRoleAndPositionAndAuthority() {
+                    const roleInput = document.getElementById('role');
+                    const positionInput = document.getElementById('position');
+                    const rolePositionSelect = document.getElementById('role_position');
+
+                    const initialValue = roleInput.value + '_' + positionInput.value;
+
+                    for (let i = 0; i < rolePositionSelect.options.length; i++) {
+                        if (rolePositionSelect.options[i].value === initialValue) {
+                            rolePositionSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                function updateRoleAndPositionAndAuthority() {
+                    const rolePositionSelect = document.getElementById('role_position');
+                    const roleInput = document.getElementById('role');
+                    const positionInput = document.getElementById('position');
+                    const authorityInput = document.getElementById('authority');
+
+                    const selectedValue = rolePositionSelect.value;
+                    const [role, position] = selectedValue.split('_');
+
+                    roleInput.value = role;
+                    positionInput.value = position;
+
+                    // Update authority based on the selected role
+                    authorityInput.value = 'ROLE_' + role;
+
+                    console.log('Updated role:', roleInput.value);
+                    console.log('Updated position:', positionInput.value);
+                    console.log('Updated authority:', authorityInput.value);
+                }
+            </script>
+
+            <input class="btn btn-primary my-5" type="submit" th:value="${user.id == null} ? 'Create' : 'Update'">
+
+        </form>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>

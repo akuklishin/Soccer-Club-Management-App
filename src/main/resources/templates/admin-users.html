@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <!-- flash message -->
+        <div th:if="${message}" class="alert alert-success my-5" role="alert">
+            <span th:text="${message}"></span>
+        </div>
+
+        <h1 class="border-bottom mb-5">All Users</h1>
+
+        <a th:href="@{/admin/users/register}" class="btn btn-primary">Create user</a>
+
+        <h2 class="mt-5 mb-3">Admins</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr th:each="admin: ${admins}">
+                <td th:text="${admin.firstName}"/>
+                <td th:text="${admin.lastName}"/>
+                <td th:text="${admin.email}"/>
+                <td>
+
+                    <a th:href="@{'/admin/user/' + ${admin.id} + '/update'}" class="btn btn-primary btn-sm"
+                       th:object="${admin}">Update</a>
+                    <a th:href="@{'/admin/user/' + ${admin.id} + '/delete'}" class="btn btn-danger btn-sm"
+                       data-bs-toggle="modal" data-bs-target="#deleteModal" th:data-user-id="${admin.id}" th:data-user-name="${admin.firstName} + ' ' + ${admin.lastName}">Delete</a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 class="mt-5 mb-3">Coaches</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Position</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr th:each="coach: ${coaches}">
+                <td th:text="${coach.firstName}"/>
+                <td th:text="${coach.lastName}"/>
+                <td th:text="${coach.position}"/>
+                <td th:text="${coach.email}"/>
+                <td>
+
+                    <a th:href="@{'/admin/user/' + ${coach.id} + '/update'}" class="btn btn-primary btn-sm"
+                       th:object="${coach}">Update</a>
+                    <a th:href="@{'/admin/user/' + ${coach.id} + '/delete'}" class="btn btn-danger btn-sm"
+                       data-bs-toggle="modal" data-bs-target="#deleteModal" th:data-user-id="${coach.id}" th:data-user-name="${coach.firstName} + ' ' + ${coach.lastName}">Delete</a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 class="mt-5 mb-3">Players</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Position</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr th:each="player: ${players}">
+                <td th:text="${player.firstName}"/>
+                <td th:text="${player.lastName}"/>
+                <td th:text="${player.position}"/>
+                <td th:text="${player.email}"/>
+                <td>
+
+                    <a th:href="@{'/admin/user/' + ${player.id} + '/update'}" class="btn btn-primary btn-sm"
+                       th:object="${player}">Update</a>
+                    <a th:href="@{'/admin/user/' + ${player.id} + '/delete'}" class="btn btn-danger btn-sm"
+                       data-bs-toggle="modal" data-bs-target="#deleteModal" th:data-user-id="${player.id}" th:data-user-name="${player.firstName} + ' ' + ${player.lastName}">Delete</a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- user deletion modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm User Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <span id="userName" class="fw-bold"></span> will be removed.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="#" class="btn btn-danger" id="deleteUserBtn">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- user deletion modal behavior -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            var deleteUserBtn = document.getElementById('deleteUserBtn');
+            var userNameSpan = document.getElementById('userName');
+
+            document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function (deleteBtn) {
+                deleteBtn.addEventListener('click', function () {
+                    var userId = deleteBtn.getAttribute('data-user-id');
+                    var userName = deleteBtn.getAttribute('data-user-name');
+                    deleteUserBtn.href = '/admin/user/' + userId + '/delete';
+                    userNameSpan.textContent = userName;
+                });
+            });
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>
