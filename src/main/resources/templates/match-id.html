@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Match</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <div class="mt-3 mb-5">
+            <a th:href="@{/}">« back to Home</a>
+        </div>
+
+        <h3 th:text="${#temporals.format(match.date, 'MMMM d, YYYY')}" class="my-3"></h3>
+
+        <div class="row bg-opacity-10 rounded-3 p-3"
+             th:classappend="${#strings.equals(match.result, 'WIN')} ? 'text-success bg-success'
+                        : (${#strings.equals(match.result, 'LOSE')} ? 'text-danger bg-danger'
+                        : (${#strings.equals(match.result, 'DRAW')} ? 'text-warning bg-warning'
+                        : 'text-info bg-info'))">
+            <div class="col text-start">
+                <h2><span th:text="${match.result}"></span> [ <span class="fw-bold" th:text="${match.ourScore} + ' - ' + ${match.opponentScore}"></span> ]</h2>
+            </div>
+            <div class="col text-end">
+                <h2>vs. <span th:text="${match.opponentName}"></span></h2>
+            </div>
+        </div>
+
+        <h3 class="mt-5 mb-3">Match Events</h3>
+
+        <ul class="list-group">
+            <li th:each="detail: ${details}" class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                <span th:text="${detail.event}" class="fw-bold"></span> by
+                <span th:text="${detail.user.firstName} + ' ' + ${detail.user.lastName}" class="fw-bold"></span>
+                </span>
+                <span th:text="${detail.minute} + '’'" class="badge bg-primary rounded-pill"></span>
+            </li>
+        </ul>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>

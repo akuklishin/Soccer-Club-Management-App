@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <div class="my-5">
+            <a th:href="@{/admin/matches}">« back to All Matches</a>
+        </div>
+
+        <h1 class="border-bottom mb-5" th:text="${match.id == null} ? 'Add Match' : 'Update Match'"></h1>
+
+        <form th:action="@{/admin/matches/add}" th:object="${match}" method="post">
+
+            <input type="hidden" name="id" id="id" th:field="*{id}">
+
+            <div class="mb-3">
+                <label class="form-label" for="date">Match Date:</label>
+                <input class="form-control" th:field="*{date}" type="date" id="date" name="date">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2"
+                     th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="opponentName">Opponent:</label>
+                <input class="form-control" th:field="*{opponentName}" type="text" id="opponentName"
+                       name="opponentName">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2"
+                     th:if="${#fields.hasErrors('opponentName')}" th:errors="*{opponentName}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="ourScore">Our Score:</label>
+                <input class="form-control" th:field="*{ourScore}" type="number" id="ourScore" name="ourScore">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2"
+                     th:if="${#fields.hasErrors('ourScore')}" th:errors="*{ourScore}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="opponentScore">Opponent Score:</label>
+                <input class="form-control" th:field="*{opponentScore}" type="number" id="opponentScore"
+                       name="opponentScore">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2"
+                     th:if="${#fields.hasErrors('opponentScore')}" th:errors="*{opponentScore}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="result">Result:</label>
+                <select class="form-control" name="result" id="result" th:field="*{result}">
+                    <option value="WIN">WIN</option>
+                    <option value="DRAW">DRAW</option>
+                    <option value="LOSE">LOSE</option>
+                </select>
+            </div>
+
+            <input class="btn btn-primary my-5" type="submit" th:value="${match.id == null} ? 'Add' : 'Update'">
+
+        </form>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>

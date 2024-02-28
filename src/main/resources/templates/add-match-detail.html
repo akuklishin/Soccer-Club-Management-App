@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <h1 class="border-bottom mb-5" th:text="${matchDetail.id == null} ? 'Add Match Detail' : 'Update Match Detail'"></h1>
+
+        <form th:action="@{'/admin/match/' + ${match.id} + '/add-detail'}" th:object="${matchDetail}" method="post">
+
+            <input type="hidden" name="id" id="id" th:field="*{id}">
+            <input type="hidden" th:field="*{match}"/>
+
+            <div class="mb-3">
+                <label class="form-label" for="minute">Minute</label>
+                <input class="form-control" th:field="*{minute}" type="number" id="minute" name="minute">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2"
+                     th:if="${#fields.hasErrors('minute')}" th:errors="*{minute}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="event">Event</label>
+                <select class="form-select" name="event" id="event" th:field="*{event}">
+                    <option value="GOAL">GOAL</option>
+                    <option value="ASSIST">ASSIST</option>
+                    <option value="YELLOW">YELLOW</option>
+                    <option value="RED">RED</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="player">Player</label>
+                <select class="form-select" name="player" id="player" th:field="*{user}">
+                    <option th:each="player: ${players}" th:value="${player.id}"
+                            th:text="${player.id} + ' ' + ${player.firstName} + ' ' + ${player.lastName}"></option>
+                </select>
+            </div>
+
+            <input class="btn btn-primary my-5" type="submit" th:value="${matchDetail.id == null} ? 'Add' : 'Update'">
+
+        </form>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>

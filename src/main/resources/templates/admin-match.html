@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <div class="my-5">
+            <a th:href="@{/admin/matches}">« back to All Matches</a>
+        </div>
+
+        <h1 class="border-bottom mb-3">Match Details</h1>
+
+        <h3 class="mb-5" th:text="${match.ourScore} + ' : ' + ${match.opponentScore} + ' vs. ' + ${match.opponentName} + ' on ' + ${match.date}"></h3>
+
+        <div th:if="${message}" class="alert alert-success my-5" role="alert">
+            <span th:text="${message}"></span>
+        </div>
+
+        <a th:href="@{'/admin/match/' + ${match.id} + '/add-detail'}" class="btn btn-primary">Add match detail</a>
+
+        <table class="table my-5">
+
+            <thead>
+            <tr>
+                <th>Minute</th>
+                <th>Event</th>
+                <th>Player</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+            <tr th:each="detail: ${details}">
+                <td th:text="${detail.minute}"/>
+                <td th:text="${detail.event}"/>
+                <td th:text="${detail.user.firstName} + ' ' + ${detail.user.lastName}"/>
+                <td>
+                    <a th:href="@{'/admin/match/' + ${match.id} + '/detail/' + ${detail.id} + '/update'}"
+                       class="btn btn-primary btn-sm" th:object="${detail}">Update</a>
+                    <a th:href="@{'/admin/match/' + ${match.id} + '/detail/' + ${detail.id} + '/delete'}"
+                       class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>

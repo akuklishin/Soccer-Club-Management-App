@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Home</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <div class="row my-5 d-flex justify-content-between">
+
+                <h2 class="mb-4">Matches timeline</h2>
+                <div class="chart-container" style="height:250px">
+                    <canvas id="canvas2"></canvas>
+                </div>
+
+        </div>
+
+        <div class="row d-flex justify-content-between">
+
+            <div class="col-lg-8 mb-5">
+
+                <h2 class="mb-4">Matches reports</h2>
+
+                <p class="text-primary bg-primary bg-opacity-10 rounded px-3 py-1"><small>Click a match below to open its detailed view</small></p>
+
+                <table class="table table-hover">
+
+                    <thead class="table-light border border-white border-3">
+                    <tr>
+                        <th>Result</th>
+                        <th>Our Score</th>
+                        <th>Opp. Score</th>
+                        <th>Opponent Team</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="match: ${matches}" class="fw-bold bg-opacity-10 border border-3 border-white"
+                        th:classappend="${#strings.equals(match.result, 'WIN')} ? 'bg-success text-success'
+                        : (${#strings.equals(match.result, 'LOSE')} ? 'bg-danger text-danger'
+                        : (${#strings.equals(match.result, 'DRAW')} ? 'bg-warning text-warning'
+                        : 'bg-info'))"
+                        th:attr="data-match-id=${match.id}"
+                        role="button">
+                        <td th:text="${match.result}"/>
+                        <td th:text="${match.ourScore}"/>
+                        <td th:text="${match.opponentScore}"/>
+                        <td th:text="${match.opponentName}"/>
+                        <td th:text="${#temporals.format(match.date, 'MMMM d')}"/>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="col-lg-4 my-4 px-5">
+
+                <h2 class="mb-5 text-center">All-time stats</h2>
+
+                <div class="my-4">
+
+                    <div class="chart-container" style="height:150px">
+                        <canvas id="canvas1"></canvas>
+                    </div>
+
+                    <p class="mt-3 text-center">
+                        <span class="fs-5 mx-1"><span id="totalWins" class="fw-bolder text-success fs-3 mx-1"></span> wins</span>
+                        <span class="fs-5 mx-1"><span id="totalDraws" class="fw-bolder text-warning fs-3 mx-1"></span> draws</span>
+                        <span class="fs-5 mx-1"><span id="totalLosses" class="fw-bolder text-danger fs-3 mx-1"></span> losses</span>
+                    </p>
+
+                </div>
+
+                <ul class="list-group my-4">
+                    <li class="list-group-item"><span id="totalGoals" class="text-primary fw-bolder"></span> goals scored</li>
+                    <li class="list-group-item"><span id="totalGoalsReceived" class="text-primary fw-bolder"></span> goals conceded</li>
+                    <li class="list-group-item">Longest win streak of <span id="winStreak" class="text-primary fw-bolder"></span></li>
+                    <li class="list-group-item">Longest lose streak of <span id="loseStreak" class="text-primary fw-bolder"></span></li>
+                    <li class="list-group-item">Best win gap of <span id="biggestWinGap" class="text-primary fw-bolder"></span> goals</li>
+                    <li class="list-group-item">Worst lose gap of <span id="biggestLoseGap" class="text-primary fw-bolder"></span> goals</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="/js/home.chart.canvas1.js"></script>
+    <script src="/js/home.chart.canvas2.js"></script>
+
+    <!-- make the table rows clickable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = document.querySelectorAll('tr[data-match-id]');
+
+            rows.forEach(function (row) {
+                row.addEventListener('click', function () {
+                    const matchId = row.getAttribute('data-match-id');
+                    window.location.href = `/match/${matchId}`;
+                });
+            });
+        });
+    </script>
+
+    <!-- all-time stats -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        (function() {
+
+            const matches = /*[[${matches}]]*/ [];
+            let totalGoals = 0;
+            let totalGoalsReceived = 0;
+            let totalWins = 0;
+            let totalDraws = 0;
+            let totalLosses = 0;
+            let winStreak = 0;
+            let loseStreak = 0;
+            let currentWinStreak = 0;
+            let currentLoseStreak = 0;
+            let biggestWinGap = 0;
+            let biggestLoseGap = 0;
+
+            matches.forEach(function(match) {
+                totalGoals += match.ourScore;
+                totalGoalsReceived += match.opponentScore;
+
+                if (match.result === 'WIN') {
+                    totalWins++;
+                    currentWinStreak++;
+                    currentLoseStreak = 0;
+                    winStreak = Math.max(winStreak, currentWinStreak);
+                    biggestWinGap = Math.max(biggestWinGap, match.ourScore - match.opponentScore);
+                } else if (match.result === 'LOSE') {
+                    totalLosses++;
+                    currentLoseStreak++;
+                    currentWinStreak = 0;
+                    loseStreak = Math.max(loseStreak, currentLoseStreak);
+                    biggestLoseGap = Math.max(biggestLoseGap, match.opponentScore - match.ourScore);
+                } else if (match.result === 'DRAW') {
+                    totalDraws++;
+                    currentWinStreak = 0;
+                    currentLoseStreak = 0;
+                }
+            });
+
+            document.getElementById('totalGoals').textContent = totalGoals;
+            document.getElementById('totalGoalsReceived').textContent = totalGoalsReceived;
+            document.getElementById('totalWins').textContent = totalWins;
+            document.getElementById('totalDraws').textContent = totalDraws;
+            document.getElementById('totalLosses').textContent = totalLosses;
+            document.getElementById('winStreak').textContent = winStreak;
+            document.getElementById('loseStreak').textContent = loseStreak;
+            document.getElementById('biggestWinGap').textContent = biggestWinGap;
+            document.getElementById('biggestLoseGap').textContent = biggestLoseGap;
+
+        })();
+        /*]]>*/
+    </script>
+
+</th:block>
+
+</body>
+</html>

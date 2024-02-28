@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Training</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+
+    <div class="container my-5">
+
+        <h1 class="border-bottom mb-5" th:text="${training.id == null} ? 'Add Training' : 'Update Training'"></h1>
+
+        <form th:action="@{'/trainings/add/' + ${coach.id}}" th:object="${training}" method="post">
+
+            <input type="hidden" name="id" id="id" th:field="*{id}">
+            <input type="hidden" th:field="*{user}"/>
+
+            <div class="mb-3">
+                <label class="form-label" for="date">Training Date</label>
+                <input class="form-control" th:field="*{date}" type="date" id="date" name="date">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Date error</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <input class="form-control" th:field="*{description}" type="text" id="description" name="description">
+                <div class="text-danger bg-danger bg-opacity-10 border border-danger rounded m-4 p-2" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
+
+            </div>
+
+            <div th:if="${#authentication.principal.position.name() == 'GENERAL'}">
+                <label for="position">Position:</label> <br>
+                <select name="position" id="position" th:field="*{position}">
+                    <option value="GENERAL">GENERAL</option>
+                    <option value="GOALKEEPER">GOALKEEPER</option>
+                    <option value="DEFENDER">DEFENDER</option>
+                    <option value="ATTACKER">ATTACKER</option>
+                </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('position')}" th:errors="*{position}">Title Error</div>
+            </div>
+
+            <input type="hidden" th:if="${#authentication.principal.position.name() != 'GENERAL'}" th:field="*{position}" th:value="${#authentication.principal.position.name()}">
+
+            <input class="btn btn-primary my-5" type="submit" th:value="${training.id == null} ? 'Add' : 'Update'">
+
+        </form>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>
